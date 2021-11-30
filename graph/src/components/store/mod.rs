@@ -168,6 +168,7 @@ pub enum EntityFilter {
     NotStartsWith(Attribute, Value),
     EndsWith(Attribute, Value),
     NotEndsWith(Attribute, Value),
+    Child(String, EntityType, Box<EntityFilter>),
 }
 
 // Define some convenience methods
