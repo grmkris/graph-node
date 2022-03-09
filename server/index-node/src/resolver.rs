@@ -3,20 +3,19 @@ use std::collections::BTreeMap;
 use std::convert::TryInto;
 use web3::types::{Address, H256};
 
-use graph::blockchain::{Blockchain, BlockchainKind};
+use graph::blockchain::{Blockchain, BlockchainKind, BlockchainMap};
+use graph::components::store::{BlockStore, EntityType, Store};
+use graph::data::graphql::{object, IntoValue, ObjectOrInterface, ValueMap};
 use graph::data::subgraph::features::detect_features;
 use graph::data::subgraph::{status, MAX_SPEC_VERSION};
 use graph::data::value::Object;
 use graph::prelude::*;
-use graph::{
-    components::store::{BlockStore, EntityType, Store},
-    data::graphql::{object, IntoValue, ObjectOrInterface, ValueMap},
-};
 use graph_graphql::prelude::{a, ExecutionContext, Resolver};
 
 /// Resolver for the index node GraphQL API.
 pub struct IndexNodeResolver<S, R> {
     logger: Logger,
+    blockchain_map: Arc<BlockchainMap>,
     store: Arc<S>,
     link_resolver: Arc<R>,
 }
@@ -26,10 +25,16 @@ where
     S: Store,
     R: LinkResolver,
 {
-    pub fn new(logger: &Logger, store: Arc<S>, link_resolver: Arc<R>) -> Self {
+    pub fn new(
+        logger: &Logger,
+        blockchain_map: Arc<BlockchainMap>,
+        store: Arc<S>,
+        link_resolver: Arc<R>,
+    ) -> Self {
         let logger = logger.new(o!("component" => "IndexNodeResolver"));
         Self {
             logger,
+            blockchain_map,
             store,
             link_resolver,
         }
@@ -468,6 +473,7 @@ where
     fn clone(&self) -> Self {
         Self {
             logger: self.logger.clone(),
+            blockchain_map: self.blockchain_map.clone(),
             store: self.store.clone(),
             link_resolver: self.link_resolver.clone(),
         }
