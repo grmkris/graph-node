@@ -399,6 +399,11 @@ impl EnvVars {
     pub fn experimental_static_filters(&self) -> bool {
         self.inner.experimental_static_filters.0
     }
+
+    /// Set by the flag `DISABLE_FIREHOSE_FILTERS`. Not enabled by default.
+    pub fn disable_firehose_filters(&self) -> bool {
+        self.inner.disable_firehose_filters.0
+    }
 }
 
 impl Default for EnvVars {
@@ -481,6 +486,8 @@ struct Inner {
     ethereum_reorg_threshold: BlockNumber,
     #[envconfig(from = "EXPERIMENTAL_STATIC_FILTERS", default = "false")]
     experimental_static_filters: EnvVarBoolean,
+    #[envconfig(from = "DISABLE_FIREHOSE_FILTERS", default = "false")]
+    disable_firehose_filters: EnvVarBoolean,
 
     // These should really be set through the configuration file, especially for
     // `GRAPH_STORE_CONNECTION_MIN_IDLE` and

@@ -1,5 +1,4 @@
 use std::collections::{BTreeMap, HashMap};
-use std::env;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -115,7 +114,7 @@ pub async fn run(
     blockchain_map.insert(network_name.clone(), Arc::new(chain));
 
     let static_filters = ENV_VARS.experimental_static_filters();
-    let firehose_filters = env::var_os("DISABLE_FIREHOSE_FILTERS").is_none();
+    let firehose_filters = !ENV_VARS.disable_firehose_filters();
 
     let blockchain_map = Arc::new(blockchain_map);
     let subgraph_instance_manager = SubgraphInstanceManager::new(
