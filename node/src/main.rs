@@ -348,7 +348,7 @@ async fn main() {
             );
             graph::spawn_blocking(job_runner.start());
         }
-        let static_filters = env::var_os("EXPERIMENTAL_STATIC_FILTERS").is_some();
+        let static_filters = ENV_VARS.experimental_static_filters();
         let firehose_filters = env::var_os("DISABLE_FIREHOSE_FILTERS").is_none();
 
         let subgraph_instance_manager = SubgraphInstanceManager::new(
