@@ -204,6 +204,7 @@ impl EnvVars {
         self.inner.max_gas_per_handler.0
     }
 
+    /// Set by the environment variable `GRAPH_LOG_QUERY_TIMING`.
     pub fn log_query_timing(&self) -> &[String] {
         &self.log_query_timing
     }
@@ -222,6 +223,11 @@ impl EnvVars {
 
     pub fn log_gql_cache_timing(&self) -> bool {
         self.log_query_timing_contains("cache") && self.log_gql_timing()
+    }
+
+    /// Set by the flag `GRAPH_LOG_POI_EVENTS`.
+    pub fn log_poi_events(&self) -> bool {
+        self.inner.log_poi_events.0
     }
 }
 
@@ -269,6 +275,8 @@ struct Inner {
     max_gas_per_handler: WithoutUnderscores<u64>,
     #[envconfig(from = "GRAPH_LOG_QUERY_TIMING", default = "")]
     log_query_timing: String,
+    #[envconfig(from = "GRAPH_LOG_POI_EVENTS", default = "false")]
+    log_poi_events: EnvVarBoolean,
 }
 
 /// When reading [`bool`] values from environment variables, we must be able to
