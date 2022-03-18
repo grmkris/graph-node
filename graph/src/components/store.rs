@@ -14,6 +14,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, RwLock};
 use std::time::Duration;
 use thiserror::Error;
+use tokio::task::JoinError;
 use web3::types::{Address, H256};
 
 use crate::blockchain::{Block, Blockchain};
@@ -804,6 +805,8 @@ pub enum StoreError {
     DatabaseUnavailable,
     #[error("subgraph writer poisoned by previous error")]
     Poisoned,
+    #[error("panic in subgraph writer: {0}")]
+    WriterPanic(JoinError),
 }
 
 // Convenience to report a constraint violation
